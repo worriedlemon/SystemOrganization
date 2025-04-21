@@ -1,0 +1,26 @@
+# File with cable penentrants sizes
+# It's a comment
+cable_penentrant: 5, 13;
+cable_penentrant: 15, 1;
+cable_penentrant: 4, 16;
+# Whitespace is also skipped
+
+cable_penentrant: 12, 12;
+cable_penentrant: 20, 1;
+cable_penentrant: 13, 9;
+cable_penentrant: 6, 13;
+cable_penentrant: 20, 18;
+cable_penentrant: 15, 10;
+    
+cable_penentrant: 11, 18;
+cable_penentrant: 6, 10;
+cable_penentrant: 12, 18;
+cable_penentrant: 3, 16;
+          
+cable_penentrant: 8, 4;
+cable_penentrant: 10, 16;
+cable_penentrant: 1, 13;
+cable_penentrant: 20, 1;
+cable_penentrant: 18, 8;
+cable_penentrant: 8, 3;
+cable_penentrant: 13, 14;
