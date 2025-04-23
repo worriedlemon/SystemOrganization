@@ -48,13 +48,13 @@ namespace CablePenentrant
             Visualize();
             MessageBox.Show("Wait for continue");
 
-            int failsLeft = 5;
+            int failsLeft = Convert.ToInt32(tryCountNumeric.Value);
             while (failsLeft > 0)
             {
                 Program.Log("Rearranging...");
 
                 double crv;
-                if (placement.Rearrange(cablePens.Count / 3, out crv))
+                if (placement.Rearrange(Convert.ToInt32(cablePens.Count * replaceRatio.Value), out crv))
                 {
                     Program.Log("Found better solution. Applying it.");
                     failsLeft = 5;

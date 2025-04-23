@@ -35,8 +35,14 @@
             ofd = new OpenFileDialog();
             loadFileButton = new Button();
             showLogButton = new Button();
+            tryCountLabel = new Label();
+            tryCountNumeric = new NumericUpDown();
+            replacementRatioLabel = new Label();
+            replaceRatio = new NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)picture).BeginInit();
             ((System.ComponentModel.ISupportInitialize)scalingFactorNumeric).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)tryCountNumeric).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)replaceRatio).BeginInit();
             SuspendLayout();
             // 
             // picture
@@ -44,9 +50,9 @@
             picture.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             picture.BackColor = Color.White;
             picture.BorderStyle = BorderStyle.FixedSingle;
-            picture.Location = new Point(12, 77);
+            picture.Location = new Point(12, 12);
             picture.Name = "picture";
-            picture.Size = new Size(600, 567);
+            picture.Size = new Size(568, 494);
             picture.TabIndex = 0;
             picture.TabStop = false;
             // 
@@ -54,7 +60,7 @@
             // 
             refresh.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             refresh.Enabled = false;
-            refresh.Location = new Point(467, 12);
+            refresh.Location = new Point(588, 447);
             refresh.Name = "refresh";
             refresh.Size = new Size(145, 59);
             refresh.TabIndex = 1;
@@ -65,7 +71,7 @@
             // label
             // 
             label.AutoSize = true;
-            label.Location = new Point(12, 31);
+            label.Location = new Point(588, 12);
             label.Name = "label";
             label.Size = new Size(104, 20);
             label.TabIndex = 2;
@@ -75,11 +81,11 @@
             // 
             scalingFactorNumeric.DecimalPlaces = 2;
             scalingFactorNumeric.Increment = new decimal(new int[] { 5, 0, 0, 65536 });
-            scalingFactorNumeric.Location = new Point(141, 31);
+            scalingFactorNumeric.Location = new Point(588, 35);
             scalingFactorNumeric.Maximum = new decimal(new int[] { 20, 0, 0, 0 });
             scalingFactorNumeric.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             scalingFactorNumeric.Name = "scalingFactorNumeric";
-            scalingFactorNumeric.Size = new Size(150, 27);
+            scalingFactorNumeric.Size = new Size(145, 27);
             scalingFactorNumeric.TabIndex = 3;
             scalingFactorNumeric.Value = new decimal(new int[] { 5, 0, 0, 0 });
             // 
@@ -91,9 +97,9 @@
             // loadFileButton
             // 
             loadFileButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            loadFileButton.Location = new Point(321, 12);
+            loadFileButton.Location = new Point(588, 382);
             loadFileButton.Name = "loadFileButton";
-            loadFileButton.Size = new Size(140, 59);
+            loadFileButton.Size = new Size(145, 59);
             loadFileButton.TabIndex = 4;
             loadFileButton.Text = "Load File";
             loadFileButton.UseVisualStyleBackColor = true;
@@ -102,7 +108,7 @@
             // showLogButton
             // 
             showLogButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            showLogButton.Location = new Point(493, 650);
+            showLogButton.Location = new Point(25, 512);
             showLogButton.Name = "showLogButton";
             showLogButton.Size = new Size(119, 29);
             showLogButton.TabIndex = 5;
@@ -110,13 +116,56 @@
             showLogButton.UseVisualStyleBackColor = true;
             showLogButton.Click += OnShowLogClick;
             // 
+            // tryCountLabel
+            // 
+            tryCountLabel.AutoSize = true;
+            tryCountLabel.Location = new Point(588, 92);
+            tryCountLabel.Name = "tryCountLabel";
+            tryCountLabel.Size = new Size(72, 20);
+            tryCountLabel.TabIndex = 2;
+            tryCountLabel.Text = "Try count:";
+            // 
+            // tryCountNumeric
+            // 
+            tryCountNumeric.Location = new Point(588, 115);
+            tryCountNumeric.Maximum = new decimal(new int[] { 20, 0, 0, 0 });
+            tryCountNumeric.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            tryCountNumeric.Name = "tryCountNumeric";
+            tryCountNumeric.Size = new Size(145, 27);
+            tryCountNumeric.TabIndex = 3;
+            tryCountNumeric.Value = new decimal(new int[] { 5, 0, 0, 0 });
+            // 
+            // replacementRatioLabel
+            // 
+            replacementRatioLabel.AutoSize = true;
+            replacementRatioLabel.Location = new Point(588, 163);
+            replacementRatioLabel.Name = "replacementRatioLabel";
+            replacementRatioLabel.Size = new Size(96, 40);
+            replacementRatioLabel.TabIndex = 2;
+            replacementRatioLabel.Text = "Replacement\r\nratio:";
+            // 
+            // replaceRatio
+            // 
+            replaceRatio.DecimalPlaces = 2;
+            replaceRatio.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
+            replaceRatio.Location = new Point(588, 206);
+            replaceRatio.Maximum = new decimal(new int[] { 1, 0, 0, 0 });
+            replaceRatio.Name = "replaceRatio";
+            replaceRatio.Size = new Size(145, 27);
+            replaceRatio.TabIndex = 3;
+            replaceRatio.Value = new decimal(new int[] { 33, 0, 0, 131072 });
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(624, 689);
+            ClientSize = new Size(740, 551);
             Controls.Add(showLogButton);
             Controls.Add(loadFileButton);
+            Controls.Add(replacementRatioLabel);
+            Controls.Add(tryCountNumeric);
+            Controls.Add(tryCountLabel);
+            Controls.Add(replaceRatio);
             Controls.Add(scalingFactorNumeric);
             Controls.Add(label);
             Controls.Add(refresh);
@@ -125,6 +174,8 @@
             Text = "Visualization";
             ((System.ComponentModel.ISupportInitialize)picture).EndInit();
             ((System.ComponentModel.ISupportInitialize)scalingFactorNumeric).EndInit();
+            ((System.ComponentModel.ISupportInitialize)tryCountNumeric).EndInit();
+            ((System.ComponentModel.ISupportInitialize)replaceRatio).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -138,5 +189,9 @@
         private OpenFileDialog ofd;
         private Button loadFileButton;
         private Button showLogButton;
+        private Label tryCountLabel;
+        private NumericUpDown tryCountNumeric;
+        private Label replacementRatioLabel;
+        private NumericUpDown replaceRatio;
     }
 }
