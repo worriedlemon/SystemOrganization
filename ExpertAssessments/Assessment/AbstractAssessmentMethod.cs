@@ -2,27 +2,15 @@
 {
     public abstract class AbstractAssessmentMethod
     {
-        public string MethodName { get; private set; }
+        public abstract string MethodName { get; }
 
-        protected ExpertAssessment? data;
+        protected int expertsCount, objectsCount;
 
-        public AbstractAssessmentMethod(string methodName)
-        {
-            MethodName = methodName;
-        }
+        public AbstractAssessmentMethod() { }
 
-        public void LoadData(ExpertAssessment data)
-        {
-            this.data = data; 
-        }
+        public virtual void LoadData(string path) { }
 
-        public ExpertAssessment GetData()
-        {
-            if (data is null) throw new ArgumentNullException(nameof(data), "No data loaded");
-            return data;
-        }
-
-        public abstract void Calculate();
+        public abstract double[] Calculate();
 
         public override sealed string ToString()
         {

@@ -5,10 +5,18 @@ namespace ExpertAssessments
     public partial class AssessmentsForm : Form
     {
         readonly AbstractAssessmentMethod[] methods = {
-            new NoAssessment(),
             new DirectAssessment(),
-            //new RankingAssessment(),
+            new PairingAssessment(),
+            new RankingAssessment(),
         };
+
+        AbstractAssessmentMethod currentMethod
+        {
+            get
+            {
+                return (methodCombo.SelectedItem as AbstractAssessmentMethod)!;
+            }
+        }
 
         public AssessmentsForm()
         {
@@ -25,85 +33,50 @@ namespace ExpertAssessments
 
             assessmentsData.Columns.Clear();
             assessmentsData.Rows.Clear();
-            var data = ReadCsvFile(ofd.FileName);
+            var content = Program.ReadCsvFile(ofd.FileName, false);
 
             if (headersCheck.Checked)
             {
-                string[] headers = data.First();
+                string[] headers = content.First();
                 for (int i = 0; i < headers.Length; ++i)
                 {
                     assessmentsData.Columns.Add($"column{i}", headers[i]);
                 }
-                data.Remove(headers);
+                content.Remove(headers);
             }
 
-            foreach (var row in data)
+            foreach (var row in content)
             {
                 assessmentsData.Rows.Add(row);
             }
-        }
-
-        private List<string[]> ReadCsvFile(string path)
-        {
-            List<string[]> list = new();
-            StreamReader reader = new(path);
-            while (!reader.EndOfStream)
-            {
-                string? line = reader.ReadLine();
-                if (line == null) break;
-                string[] values = line.Split(',');
-                list.Add(values);
-            }
-            return list;
-        }
-
-        private void OnCalculateClick(object sender, EventArgs e)
-        {
-            AbstractAssessmentMethod? method = methodCombo.SelectedItem as AbstractAssessmentMethod;
 
             try
             {
-                method?.LoadData(GetDataFromTable());
-                method?.Calculate();
+                currentMethod.LoadData(ofd.FileName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error occurred: {ex.Message}", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
+        private void OnCalculateClick(object sender, EventArgs e)
+        {
+            if (currentMethod is null) return;
+
+            try
+            {
+                double[] results = currentMethod.Calculate();
+                string resultString = results
+                    .Select((d, i) => $"Object {i}: {d:f3}")
+                    .Aggregate((s1, s2) => $"{s1}\n{s2}");
+                MessageBox.Show($"Results are:\n{resultString}", "Results");
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private ExpertAssessment GetDataFromTable()
-        {
-            int criteriaCount = assessmentsData.Columns.Count - 2;
-            HashSet<string> objects = new();
-            HashSet<int> experts = new();
-
-            for (int i = 0; i < assessmentsData.Rows.Count - 1; ++i)
-            {
-
-                experts.Add(Convert.ToInt32(assessmentsData.Rows[i].Cells[0].Value as string));
-                objects.Add(assessmentsData.Rows[i].Cells[1].Value as string);
-            }
-
-            int objectsCount = objects.Count;
-            int expertsCount = experts.Count;
-
-            Dictionary<int, double[,]> values = new();
-
-            for (int i = 0; i < expertsCount; ++i)
-            {
-                values.TryAdd(i, new double[objectsCount, criteriaCount]);
-                
-                for (int j = 0; j < objectsCount; ++j)
-                {
-                    for (int k = 0; k < criteriaCount; ++k)
-                    {
-                        values[i][j, k] = Convert.ToDouble(assessmentsData.Rows[i * objectsCount + j].Cells[k + 2].Value);
-                    }
-                }
-            }
-
-            return new(values);
         }
     }
 }
