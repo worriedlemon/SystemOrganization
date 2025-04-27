@@ -6,6 +6,7 @@ namespace ExpertAssessments.Assessment
     public class PairingAssessment : AbstractAssessmentMethod
     {
         public override string MethodName => "Pairing";
+        public override string FileFilter => "*.p.csv";
 
         protected Dictionary<int, float[,]>? data;
 

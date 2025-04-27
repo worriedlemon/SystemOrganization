@@ -57,6 +57,7 @@
             methodCombo.Name = "methodCombo";
             methodCombo.Size = new Size(181, 28);
             methodCombo.TabIndex = 1;
+            methodCombo.SelectedIndexChanged += OnSelectedIndexChange;
             // 
             // startButton
             // 
@@ -97,6 +98,7 @@
             // 
             // headersCheck
             // 
+            headersCheck.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             headersCheck.AutoSize = true;
             headersCheck.Checked = true;
             headersCheck.CheckState = CheckState.Checked;
@@ -109,6 +111,7 @@
             // 
             // assessmentsData
             // 
+            assessmentsData.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             assessmentsData.BackgroundColor = SystemColors.ControlLightLight;
             assessmentsData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             assessmentsData.Location = new Point(12, 32);

@@ -4,6 +4,8 @@
     {
         public override string MethodName => "Ranking";
 
+        public override string FileFilter => "*.r.csv";
+
         public RankingAssessment() : base() { }
 
         public override void LoadData(string path)

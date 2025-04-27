@@ -3,6 +3,7 @@
     public abstract class AbstractAssessmentMethod
     {
         public abstract string MethodName { get; }
+        public virtual string FileFilter => "*.csv";
 
         protected int expertsCount, objectsCount;
 
@@ -12,9 +13,6 @@
 
         public abstract double[] Calculate();
 
-        public override sealed string ToString()
-        {
-            return MethodName;
-        }
+        public override sealed string ToString() => MethodName;
     }
 }

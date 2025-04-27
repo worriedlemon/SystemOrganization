@@ -21,9 +21,9 @@ namespace ExpertAssessments
         public AssessmentsForm()
         {
             InitializeComponent();
-            ofd.InitialDirectory = Directory.GetCurrentDirectory();
             methodCombo.Items.AddRange(methods);
             methodCombo.SelectedIndex = 0;
+            ofd.InitialDirectory = Directory.GetCurrentDirectory();
         }
 
         private void OnLoadClick(object? sender, EventArgs e)
@@ -77,6 +77,11 @@ namespace ExpertAssessments
             {
                 MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void OnSelectedIndexChange(object sender, EventArgs e)
+        {
+            ofd.Filter = $"{currentMethod.MethodName} file|{currentMethod.FileFilter}";
         }
     }
 }

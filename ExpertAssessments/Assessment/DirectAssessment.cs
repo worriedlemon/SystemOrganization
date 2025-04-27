@@ -81,5 +81,7 @@
 
             return result;
         }
+
+        public override string FileFilter => "*.d.csv";
     }
 }
