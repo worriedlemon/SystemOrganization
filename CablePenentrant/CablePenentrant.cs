@@ -78,6 +78,11 @@ namespace CablePenentrant
             coords_[1] = y;
         }
 
+        public void Transpose()
+        {
+            (sizes_[0], sizes_[1]) = (sizes_[1], sizes_[0]);
+        }
+
         public Vector4 GetPosition()
         {
             return coords_;

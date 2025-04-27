@@ -48,7 +48,8 @@ namespace CablePenentrant
             Visualize();
             MessageBox.Show("Wait for continue");
 
-            int failsLeft = Convert.ToInt32(tryCountNumeric.Value);
+            int maxFails = Convert.ToInt32(tryCountNumeric.Value);
+            int failsLeft = maxFails;
             while (failsLeft > 0)
             {
                 Program.Log("Rearranging...");
@@ -57,7 +58,7 @@ namespace CablePenentrant
                 if (placement.Rearrange(Convert.ToInt32(cablePens.Count * replaceRatio.Value), out crv))
                 {
                     Program.Log("Found better solution. Applying it.");
-                    failsLeft = 5;
+                    failsLeft = maxFails;
                 }
                 else
                 {

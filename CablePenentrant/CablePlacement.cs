@@ -97,28 +97,32 @@
             {
                 copy.Add(new CablePenentrant2D(cp));
             }
-            copy[2].SetPosition(-20, -20);
 
             CablePlacement placement = new(ref copy);
+
+            int[] availableIndexes = Enumerable.Range(0, copy.Count).ToArray();
+            rng.Shuffle(availableIndexes);
 
             List<CablePenentrant2D> taken = new();
             for (int i = 0; i < count; ++i)
             {
-                int index = rng.Next(copy.Count - 1);
-                if (Contains(taken, copy[index]))
-                {
-                    --i;
-                    continue;
-                }
-                taken.Add(copy[index]);
+                taken.Add(copy[availableIndexes[i]]);
             }
 
             placement.Shrink(false, taken);
 
+            int direction = oldMin[0] > oldMin[1] ? 1 : 0;
+            Vector4 startPos = new();
+            startPos[direction] = oldMin[direction];
             foreach (CablePenentrant2D cp in taken)
             {
-                Vector4 pos = cp.GetPosition();
-                cp.SetPosition(oldMin[0] + pos[0], pos[1]);
+                Vector4 pos = startPos + cp.GetPosition();
+                cp.SetPosition(pos[0], pos[1]);
+                Vector4 size = cp.GetSize();
+                if (size[0] > size[1] && direction == 0 || size[0] < size[1] && direction == 1)
+                {
+                    cp.Transpose();
+                }
             }
 
             copy.Sort((CablePenentrant2D first, CablePenentrant2D second) =>

@@ -58,7 +58,7 @@
             // 
             // refresh
             // 
-            refresh.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            refresh.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             refresh.Enabled = false;
             refresh.Location = new Point(588, 447);
             refresh.Name = "refresh";
@@ -70,6 +70,7 @@
             // 
             // label
             // 
+            label.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label.AutoSize = true;
             label.Location = new Point(588, 12);
             label.Name = "label";
@@ -79,6 +80,7 @@
             // 
             // scalingFactorNumeric
             // 
+            scalingFactorNumeric.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             scalingFactorNumeric.DecimalPlaces = 2;
             scalingFactorNumeric.Increment = new decimal(new int[] { 5, 0, 0, 65536 });
             scalingFactorNumeric.Location = new Point(588, 35);
@@ -96,7 +98,7 @@
             // 
             // loadFileButton
             // 
-            loadFileButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            loadFileButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             loadFileButton.Location = new Point(588, 382);
             loadFileButton.Name = "loadFileButton";
             loadFileButton.Size = new Size(145, 59);
@@ -107,8 +109,8 @@
             // 
             // showLogButton
             // 
-            showLogButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            showLogButton.Location = new Point(25, 512);
+            showLogButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            showLogButton.Location = new Point(12, 512);
             showLogButton.Name = "showLogButton";
             showLogButton.Size = new Size(119, 29);
             showLogButton.TabIndex = 5;
@@ -118,6 +120,7 @@
             // 
             // tryCountLabel
             // 
+            tryCountLabel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             tryCountLabel.AutoSize = true;
             tryCountLabel.Location = new Point(588, 92);
             tryCountLabel.Name = "tryCountLabel";
@@ -127,6 +130,7 @@
             // 
             // tryCountNumeric
             // 
+            tryCountNumeric.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             tryCountNumeric.Location = new Point(588, 115);
             tryCountNumeric.Maximum = new decimal(new int[] { 20, 0, 0, 0 });
             tryCountNumeric.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
@@ -137,6 +141,7 @@
             // 
             // replacementRatioLabel
             // 
+            replacementRatioLabel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             replacementRatioLabel.AutoSize = true;
             replacementRatioLabel.Location = new Point(588, 163);
             replacementRatioLabel.Name = "replacementRatioLabel";
@@ -146,6 +151,7 @@
             // 
             // replaceRatio
             // 
+            replaceRatio.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             replaceRatio.DecimalPlaces = 2;
             replaceRatio.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
             replaceRatio.Location = new Point(588, 206);
