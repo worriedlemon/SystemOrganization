@@ -6,7 +6,7 @@ namespace CablePenentrant
     {
         List<CablePenentrant2D> cablePens;
         string path;
-        string logFile = Path.Combine(Environment.CurrentDirectory, "program.log");
+        readonly string logFile = Path.Combine(Environment.CurrentDirectory, "program.log");
         Graphics g;
 
         public MainForm()
@@ -27,7 +27,7 @@ namespace CablePenentrant
             g.ScaleTransform(1, -1);
         }
 
-        void FindSolution()
+        private void FindSolution()
         {
             cablePens = CablePenentrantReader.FromFile(path);
 

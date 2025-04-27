@@ -2,8 +2,19 @@
 {
     public class CablePlacement
     {
+        private enum Coord
+        {
+            X = 0, Y = 1
+        }
+
         private List<CablePenentrant2D> penentrants;
         private Random rng;
+
+        public CablePlacement(ref List<CablePenentrant2D> ps)
+        {
+            penentrants = ps;
+            rng = new();
+        }
 
         public void Init()
         {
@@ -148,17 +159,6 @@
                 return true;
             }
             return false;
-        }
-
-        public CablePlacement(ref List<CablePenentrant2D> ps)
-        {
-            penentrants = ps;
-            rng = new();
-        }
-
-        private enum Coord
-        {
-            X = 0, Y = 1
         }
 
         private double ShrinkInner(CablePenentrant2D cp, Coord coord, List<CablePenentrant2D>? takenOut)
