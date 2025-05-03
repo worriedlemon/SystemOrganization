@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "CablePenentrant": {
+      "commandName": "Project"
+    },
+    "CablePenentrantNOGUI": {
+      "commandName": "Project",
+      "commandLineArgs": "--nogui -r 0.4 -n 10 --input ../../../penentrants.txt --output ../../../output.txt"
+    }
+  }
+}

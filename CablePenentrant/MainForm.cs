@@ -4,6 +4,7 @@ namespace CablePenentrant
 {
     public partial class MainForm : Form
     {
+        SolutionFinder solution;
         List<CablePenentrant2D> cablePens;
         string path;
         readonly string logFile = Path.Combine(Environment.CurrentDirectory, "program.log");
@@ -25,53 +26,6 @@ namespace CablePenentrant
             g = picture.CreateGraphics();
             g.TranslateTransform(0, picture.Size.Height);
             g.ScaleTransform(1, -1);
-        }
-
-        private void FindSolution()
-        {
-            cablePens = CablePenentrantReader.FromFile(path);
-
-            Program.Log("Parsed cable penentrants:");
-            foreach (var p in cablePens)
-            {
-                Program.Log(p.ToString());
-            }
-
-            Program.Log("Initializing placement algorithm...");
-
-            CablePlacement placement = new(ref cablePens);
-            placement.Init();
-            placement.Shrink(true);
-
-            Program.Log("Initial placement done!");
-            Program.Log($"Criteria value = {placement.GetMinimumRectangle().Length()}.");
-            Visualize();
-            MessageBox.Show("Wait for continue");
-
-            int maxFails = Convert.ToInt32(tryCountNumeric.Value);
-            int failsLeft = maxFails;
-            while (failsLeft > 0)
-            {
-                Program.Log("Rearranging...");
-
-                double crv;
-                if (placement.Rearrange(Convert.ToInt32(cablePens.Count * replaceRatio.Value), out crv))
-                {
-                    Program.Log("Found better solution. Applying it.");
-                    failsLeft = maxFails;
-                }
-                else
-                {
-                    Program.Log("Solution rollback, trying again...");
-                    --failsLeft;
-                }
-                Program.Log($"Criteria value = {crv}.");
-            }
-            Program.Log("Found pseudooptimal solution!\nResult:");
-            foreach (var p in cablePens)
-            {
-                Program.Log(p.ToString());
-            }
         }
 
         private List<RectangleF> GetCoordinates(float scaleFactor)
@@ -106,7 +60,9 @@ namespace CablePenentrant
         {
             try
             {
-                FindSolution();
+                solution.FailsCount = Convert.ToInt32(tryCountNumeric.Value);
+                solution.ReplaceRatio = Convert.ToDouble(replaceRatio.Value);
+                cablePens = solution.FindSolution(out double _);
                 Visualize();
             }
             catch (Exception ex)
@@ -123,6 +79,12 @@ namespace CablePenentrant
 
             path = ofd.FileName;
             refresh.Enabled = true;
+            solution = new(path)
+            {
+                FailsCount = Convert.ToInt32(tryCountNumeric.Value),
+                ReplaceRatio = Convert.ToDouble(replaceRatio.Value)
+            };
+            solution.OnVisualize += Visualize;
         }
 
         private void OnShowLogClick(object sender, EventArgs e)
