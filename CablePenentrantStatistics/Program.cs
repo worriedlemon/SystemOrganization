@@ -19,7 +19,8 @@ namespace CablePenentrantStatistics
             sb.Append($" -n {attempts} ");
             sb.Append($" --input {inputFile}");
             sb.Append($" --output {outputFile}");
-            sb.Append($" --log {logFile}");
+            // Раскомментировать, чтобы получить полный лог программы
+            //sb.Append($" --log {logFile}");
             return sb.ToString();
         }
 
@@ -30,7 +31,7 @@ namespace CablePenentrantStatistics
                 File.Create(logFile).Close();
 
                 double initRate = 0.33;
-                int initAttempts = 5;
+                int initAttempts = 6;
 
                 Console.WriteLine("Parameters:\n(1) Rate\n(2) Attemts count\n");
                 Console.WriteLine("Enter parameter:");
@@ -66,7 +67,7 @@ namespace CablePenentrantStatistics
                     return;
                 }
 
-                List<(double rate, double attempts, double crit)> criteria = new(p.Count);
+                List<(double rate, double attempts, double critAvg, double critBest)> criteria = new(p.Count);
                 foreach (var val in p)
                 {
                     double[] criteriaTemp = new double[count];
@@ -80,15 +81,15 @@ namespace CablePenentrantStatistics
                         criteriaTemp[i] = Convert.ToDouble(sr.ReadLine());
                         sr.Close();
                     }
-                    criteria.Add((val.rate, val.attempts, criteriaTemp.Min()));
+                    criteria.Add((val.rate, val.attempts, criteriaTemp.Average(), criteriaTemp.Min()));
                     Console.WriteLine($"({val.rate:f2}, {val.attempts}) finished.");
                 }
 
                 Console.WriteLine("\nResults:");
                 int cur = 0;
-                foreach (var (rate, attempts, crit) in criteria)
+                foreach (var (rate, attempts, critAvg, critBest) in criteria)
                 {
-                    Console.WriteLine($"{++cur}: rate = {rate:f2}, attempts = {attempts}, best crit = {crit}");
+                    Console.WriteLine($"{++cur}: rate = {rate:f2}, attempts = {attempts}, avg. crit = {critAvg:f3}, best crit = {critBest:f3}");
                 }
             }
             catch (Exception ex)

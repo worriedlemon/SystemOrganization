@@ -12,11 +12,6 @@
             FailsCount = 5;
             ReplaceRatio = 0.33;
             cablePensInitial = new();
-            ReadFromFile(path);
-        }
-
-        public void ReadFromFile(string path)
-        {
             cablePensInitial = CablePenentrantReader.FromFile(path);
             Program.Log("Parsed cable penentrants:");
             foreach (var p in cablePensInitial)
@@ -48,8 +43,7 @@
                 MessageBox.Show("Wait for continue");
             }
 
-            int maxFails = Convert.ToInt32(FailsCount);
-            int failsLeft = maxFails;
+            int failsLeft = FailsCount;
             while (failsLeft > 0)
             {
                 Program.Log("Rearranging...");
@@ -57,7 +51,7 @@
                 if (placement.Rearrange(Convert.ToInt32(cablePens.Count * ReplaceRatio), out criteria))
                 {
                     Program.Log("Found better solution. Applying it.");
-                    failsLeft = maxFails;
+                    failsLeft = FailsCount;
                 }
                 else
                 {
