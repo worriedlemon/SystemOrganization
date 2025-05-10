@@ -1,10 +1,24 @@
 using System.Diagnostics;
+using System.Reflection;
+using CablePenentrant.SolutionFinder;
 
 namespace CablePenentrant
 {
     public partial class MainForm : Form
     {
-        SolutionFinder solution;
+        readonly List<IPlacingSolutionFinder> solutions = new() {
+            new CommonSolutionFinder(),
+            new EvoSolutionFinder()
+        };
+
+        private IPlacingSolutionFinder solution
+        {
+            get
+            {
+                return (methodCombo.SelectedItem as IPlacingSolutionFinder)!;
+            }
+        }
+
         List<CablePenentrant2D> cablePens;
         string path;
         readonly string logFile = Path.Combine(Environment.CurrentDirectory, "program.log");
@@ -12,8 +26,8 @@ namespace CablePenentrant
 
         public MainForm()
         {
-            File.Delete(logFile);
             InitializeComponent();
+            File.Delete(logFile);
             Program.LogMessage += Console.WriteLine;
             Program.LogMessage += (string message) =>
             {
@@ -21,6 +35,8 @@ namespace CablePenentrant
             };
 
             path = "";
+            methodCombo.DataSource = solutions;
+            methodCombo.SelectedIndex = 0;
             cablePens = new();
             ofd.InitialDirectory = Environment.CurrentDirectory;
             g = picture.CreateGraphics();
@@ -60,8 +76,6 @@ namespace CablePenentrant
         {
             try
             {
-                solution.FailsCount = Convert.ToInt32(tryCountNumeric.Value);
-                solution.ReplaceRatio = Convert.ToDouble(replaceRatio.Value);
                 cablePens = solution.FindSolution(out double _);
                 Visualize();
             }
@@ -79,17 +93,20 @@ namespace CablePenentrant
 
             path = ofd.FileName;
             refresh.Enabled = true;
-            solution = new(path)
-            {
-                FailsCount = Convert.ToInt32(tryCountNumeric.Value),
-                ReplaceRatio = Convert.ToDouble(replaceRatio.Value)
-            };
-            solution.OnVisualize += Visualize;
+            solution.Load(path);
         }
 
         private void OnShowLogClick(object sender, EventArgs e)
         {
             Process.Start("notepad.exe", logFile)?.WaitForExit();
+        }
+
+        private void OnSelectedMethodChange(object sender, EventArgs e)
+        {
+            formPanel.Controls.Clear();
+            var frm = solution.GetParametersForm();
+            formPanel.Controls.Add(frm);
+            frm.Show();
         }
     }
 }

@@ -1,19 +1,18 @@
-﻿namespace CablePenentrant
+﻿using System.Drawing;
+
+namespace CablePenentrant
 {
-    public class CablePlacement
+    public class StraightCablePlacement
     {
-        private enum Coord
+        protected List<CablePenentrant2D> penentrants;
+        protected enum Coord
         {
             X = 0, Y = 1
         }
 
-        private List<CablePenentrant2D> penentrants;
-        private Random rng;
-
-        public CablePlacement(ref List<CablePenentrant2D> ps)
+        public StraightCablePlacement(in List<CablePenentrant2D> ps)
         {
             penentrants = ps;
-            rng = new();
         }
 
         public void Init()
@@ -45,11 +44,12 @@
                 else
                 {
                     height += maxHeight;
-                    maxHeight = 0;
+                    maxHeight = size[1];
                     p.SetPosition(0, height);
                     width = size[0];
                 }
             }
+            Shrink(true);
         }
 
         public Vector4 GetMinimumRectangle()
@@ -99,6 +99,54 @@
                 }
             } while (changes > 0);
         }
+        private double ShrinkInner(CablePenentrant2D cp, Coord coord, List<CablePenentrant2D>? takenOut)
+        {
+            double max = -1;
+            Vector4 position = cp.GetPosition();
+            Vector4 size = cp.GetSize();
+            foreach (CablePenentrant2D other in penentrants)
+            {
+                if (other == cp || takenOut is not null && Contains(takenOut, other)) continue;
+
+                Vector4 otherPos = other.GetPosition();
+                Vector4 otherSize = other.GetSize();
+
+                int coordi = (int)coord;
+                int opposi = 1 - coordi;
+                bool notFits = (otherPos[opposi] <= position[opposi] && otherPos[opposi] + otherSize[opposi] <= position[opposi]) ||
+                    (otherPos[opposi] >= position[opposi] + size[opposi] && otherPos[opposi] + otherSize[opposi] >= position[opposi] + size[opposi]);
+
+                if (notFits) continue;
+
+                double distance = position[coordi] - (otherPos[coordi] + otherSize[coordi]);
+
+                if (distance >= 0 && (max < 0 || distance < max))
+                {
+                    max = distance;
+                }
+            }
+
+            return max < 0 ? position[(int)coord] : max;
+        }
+
+        private static bool Contains(List<CablePenentrant2D> takenOut, CablePenentrant2D cp)
+        {
+            foreach (CablePenentrant2D p in takenOut)
+            {
+                if (p == cp) return true;
+            }
+            return false;
+        }
+    }
+
+    public class CablePlacement : StraightCablePlacement
+    {
+        private Random rng;
+
+        public CablePlacement(in List<CablePenentrant2D> ps) : base(ps)
+        {
+            rng = new();
+        }        
 
         public bool Rearrange(int count, out double criteriaValue)
         {
@@ -109,7 +157,7 @@
                 copy.Add(new CablePenentrant2D(cp));
             }
 
-            CablePlacement placement = new(ref copy);
+            CablePlacement placement = new(copy);
 
             int[] availableIndexes = Enumerable.Range(0, copy.Count).ToArray();
             rng.Shuffle(availableIndexes);
@@ -148,7 +196,7 @@
 
             placement.Shrink(true);
 
-            Vector4 newMin = placement.GetMinimumRectangle();
+            Vector4 newMin = GetMinimumRectangle();
 
             criteriaValue = newMin.Length();
 
@@ -157,45 +205,6 @@
                 penentrants.Clear();
                 penentrants.AddRange(copy);
                 return true;
-            }
-            return false;
-        }
-
-        private double ShrinkInner(CablePenentrant2D cp, Coord coord, List<CablePenentrant2D>? takenOut)
-        {
-            double max = -1;
-            Vector4 position = cp.GetPosition();
-            Vector4 size = cp.GetSize();
-            foreach (CablePenentrant2D other in penentrants)
-            {
-                if (other == cp || takenOut is not null && Contains(takenOut, other)) continue;
-
-                Vector4 otherPos = other.GetPosition();
-                Vector4 otherSize = other.GetSize();
-
-                int coordi = (int)coord;
-                int opposi = 1 - coordi;
-                bool notFits = (otherPos[opposi] <= position[opposi] && otherPos[opposi] + otherSize[opposi] <= position[opposi]) ||
-                    (otherPos[opposi] >= position[opposi] + size[opposi] && otherPos[opposi] + otherSize[opposi] >= position[opposi] + size[opposi]);
-
-                if (notFits) continue;
-
-                double distance = position[coordi] - (otherPos[coordi] + otherSize[coordi]);
-
-                if (distance >= 0 && (max < 0 || distance < max))
-                {
-                    max = distance;
-                }
-            }
-
-            return max < 0 ? position[(int)coord] : max;
-        }
-
-        private static bool Contains(List<CablePenentrant2D> takenOut, CablePenentrant2D cp)
-        {
-            foreach (CablePenentrant2D p in takenOut)
-            {
-                if (p == cp) return true;
             }
             return false;
         }

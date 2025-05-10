@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Runtime.InteropServices;
+using CablePenentrant.SolutionFinder;
 
 namespace CablePenentrant
 {
@@ -91,11 +92,9 @@ namespace CablePenentrant
                         }
                     }
 
-                    SolutionFinder finder = new(inputFile)
-                    {
-                        FailsCount = attempts,
-                        ReplaceRatio = rate,
-                    };
+                    CommonSolutionFinder finder = new(false);
+                    finder.Load(inputFile);
+                    finder.BindParameters(attempts, rate);
                     var cablePens = finder.FindSolution(out double criteria);
 
                     StreamWriter ws = new(outputFile);

@@ -1,17 +1,25 @@
-﻿namespace CablePenentrant
+﻿namespace CablePenentrant.SolutionFinder
 {
-    public class SolutionFinder
+    public class CommonSolutionFinder : IPlacingSolutionFinder
     {
-        public int FailsCount;
-        public double ReplaceRatio;
         List<CablePenentrant2D> cablePensInitial;
-        public event Action? OnVisualize;
+        int failsCount;
+        double replaceRate;
+        CommonSolutionParametersForm? form;
 
-        public SolutionFinder(string path)
+        public CommonSolutionFinder(bool form = true)
         {
-            FailsCount = 5;
-            ReplaceRatio = 0.33;
             cablePensInitial = new();
+            failsCount = 5;
+            replaceRate = 0.33;
+            if (form)
+            {
+                this.form = new(failsCount, replaceRate);
+            }
+        }
+
+        public void Load(string path)
+        {
             cablePensInitial = CablePenentrantReader.FromFile(path);
             Program.Log("Parsed cable penentrants:");
             foreach (var p in cablePensInitial)
@@ -22,6 +30,12 @@
 
         public List<CablePenentrant2D> FindSolution(out double criteriaValue)
         {
+            if (form is not null)
+            {
+                failsCount = form.FailsCount;
+                replaceRate = form.ReplaceRate;
+            }
+
             List<CablePenentrant2D> cablePens = new();
             foreach (var cp in cablePensInitial)
             {
@@ -29,29 +43,23 @@
             }
             Program.Log("Initializing placement algorithm...");
 
-            CablePlacement placement = new(ref cablePens);
+            CablePlacement placement = new(cablePens);
             placement.Init();
-            placement.Shrink(true);
 
             double criteria = placement.GetMinimumRectangle().Length();
             criteriaValue = criteria;
             Program.Log($"Initial placement done!");
             Program.Log($"Criteria value = {criteria}.");
-            if (OnVisualize is not null)
-            {
-                OnVisualize();
-                MessageBox.Show("Wait for continue");
-            }
 
-            int failsLeft = FailsCount;
+            int failsLeft = failsCount;
             while (failsLeft > 0)
             {
                 Program.Log("Rearranging...");
 
-                if (placement.Rearrange(Convert.ToInt32(cablePens.Count * ReplaceRatio), out criteria))
+                if (placement.Rearrange(Convert.ToInt32(cablePens.Count * replaceRate), out criteria))
                 {
                     Program.Log("Found better solution. Applying it.");
-                    failsLeft = FailsCount;
+                    failsLeft = failsCount;
                 }
                 else
                 {
@@ -71,6 +79,19 @@
             }
 
             return cablePens;
+        }
+
+        public Form GetParametersForm() => form!;
+
+        public void BindParameters(int failsCount, double replaceRate)
+        {
+            this.failsCount = failsCount;
+            this.replaceRate = replaceRate;
+        }
+
+        public override string ToString()
+        {
+            return "Common Euristic Method";
         }
     }
 }
